@@ -89,6 +89,7 @@ class RRT {
         // How to get:
         //             fingerPaths.at(int).at(nodeNum);
 
+        void reset();
         std::vector<int> search(int start, int end);
         void Algorithm(hand &hand, fingers finger, ss &ss);
         // Defines RRT Algorithm as a member function of "RRT" class
@@ -572,21 +573,10 @@ bool isValid(Eigen::VectorXd start, Eigen::VectorXd end, hand &hand, ss &ss) {
 
 };
 
-void saveVectorToFile(const std::vector<Eigen::Vector3d>& data, const std::string& filename) {
-    std::string fullPath = "your directory" + filename;
-    // Specify your desired path
-
-    std::ofstream file(fullPath);
-    
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file: " << fullPath << std::endl;
-        return;
-    }
-
-    for (const auto& vec : data) {
-        file << vec.x() << ", " << vec.y() << ", " << vec.z() << std::endl;
-    }
-    file.close();
+void RRT::reset() {
+    allJoints.clear();
+    tree.clear();
+    edges.clear();
 };
 
 std::vector<int> RRT::search(int start, int end) {
@@ -619,7 +609,6 @@ std::vector<int> RRT::search(int start, int end) {
     // Sets start node to having a cost of 0 (for each node we update this if we find a lower cost)
 
     while (!open_set.empty()) {
-
         int currNode = open_set.top().second;
         open_set.pop();
         closed_set.insert(currNode);
@@ -693,6 +682,23 @@ std::vector<int> RRT::search(int start, int end) {
 
 };
 
+void saveVectorToFile(const std::vector<Eigen::Vector3d>& data, const std::string& filename) {
+    std::string fullPath = "your working directory/" + filename;
+    // Specify your desired path
+
+    std::ofstream file(fullPath);
+    
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file: " << fullPath << std::endl;
+        return;
+    }
+
+    for (const auto& vec : data) {
+        file << vec.x() << ", " << vec.y() << ", " << vec.z() << std::endl;
+    }
+    file.close();
+};
+
 void RRT::Algorithm(hand &hand, fingers finger, ss &ss) {
     // Inputs: Hand Structure
     //         Finger Enumeration
@@ -706,9 +712,9 @@ void RRT::Algorithm(hand &hand, fingers finger, ss &ss) {
     //              cspace. After each step, confirm each agent is not in
     //              collision with either an onstacle or another agent.
 
-    double p_goal = 0.5;
+    double p_goal = 1;
     double r = 0.05;
-    double maxIterations = 1000000;
+    double maxIterations = 2000;
     double epsilon = 0.01;
     // Tuning variables
 
@@ -952,9 +958,10 @@ int main() {
     ss stateSpace;
     fingers finger;
     RRT rrt;
+    rrt.reset();
     // Defines needed variables for structs, enumerations and classes
 
-    int config = 1; // [0, 1]
+    int config = 0; // [0, 1]
     // Select configuration for starting and ending configuration
 
     handDimensions(myHand);
@@ -962,28 +969,12 @@ int main() {
     jointAngles(stateSpace);
     // Calls necessary functions for initialization of variables to be passed into later functions
 
-    for (int i = 0; i < 20; ++i) {
-        auto start_time = std::chrono::high_resolution_clock::now();
-        // Starts runtime clock
-
-        rrt.Algorithm(myHand, finger, stateSpace);
-        // Calls RRT function for our problem
-
-        auto end_time = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> runtime = end_time - start_time;
-        std::cout << runtime.count() << " ";
-        // Ends clock and prints runtime
-
-    }
-    std::cout << std::endl;
-    // Benchmarking
-
     rrt.Algorithm(myHand, finger, stateSpace);
     // Calls RRT function for our problem
 
     auto end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> runtime = end_time - start_time;
-    std::cout << "\nRuntime: " << runtime.count() << " seconds\n" << std::endl;
+    std::cout << runtime.count() << " ";
     // Ends clock and prints runtime
 
     return 0;
