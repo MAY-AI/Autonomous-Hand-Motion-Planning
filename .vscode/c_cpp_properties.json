@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/eigen-master",
+                "${workspaceFolder}/matplotlib-cpp-master",
+                "${workspaceFolder}/**",
+                "C:/Python313/include",
+                "C:/Python313/Lib/site-packages/numpy/_core/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
