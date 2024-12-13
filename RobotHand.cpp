@@ -676,23 +676,6 @@ std::vector<int> RRT::search(int start, int end) {
 
 };
 
-void saveVectorToFile(const std::vector<Eigen::Vector3d>& data, const std::string& filename) {
-    std::string fullPath = "C:/Users/gagos/OneDrive/Documents/Boulder/5254/Final Project/" + filename;
-    // Specify your desired path
-
-    std::ofstream file(fullPath);
-    
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file: " << fullPath << std::endl;
-        return;
-    }
-
-    for (const auto& vec : data) {
-        file << vec.x() << ", " << vec.y() << ", " << vec.z() << std::endl;
-    }
-    file.close();
-};
-
 void RRT::Algorithm(hand &hand, fingers finger, ss &ss) {
     // Inputs: Hand Structure
     //         Finger Enumeration
@@ -929,14 +912,6 @@ void RRT::Algorithm(hand &hand, fingers finger, ss &ss) {
 
     std::vector<int> pathDijkstra = search(0, tree.size() - 1);
     // Uses Dijkstra's Algorithm on the tree to find a path and return it
-
-    // for (int i = 0; i < 4*m + 2; ++i) {
-    //     std::ostringstream oss;
-    //     oss << "Joint_" << static_cast<int>(i) << "_Movement.csv";
-    //     std::string filename = oss.str();
-    //     saveVectorToFile(allJoints.at(i), filename);
-    // }
-    // // Loops through all fingers and writes their contents to a file
 
 };
 
